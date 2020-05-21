@@ -43,7 +43,6 @@ export class Server {
   private configureRoutes(): void {
 
     this.app.get("/", (req, res) => {
-      console.log("sending index.html");
       res.sendFile("index.html");
     });
   }
@@ -58,7 +57,8 @@ export class Server {
    * Handles socket and user logic
    */
   private handleSocketConnection(): void {
-    this.io.on("connection", socket => {
+    console.log("sending index.html");
+    this.io.sockets.on("connection", socket => {
       const existingSocket = this.activeSockets.find(
         existingSocket => existingSocket === socket.id
       );
