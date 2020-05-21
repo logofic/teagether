@@ -1,25 +1,35 @@
 import express, { Application } from "express";
 import socketIO, { Server as SocketIOServer } from "socket.io";
-import { createServer, Server as HTTPServer } from "http";
+import { createServer, Server as https } from "https";
 import path from "path";
 
+import * as fs from 'fs';
+import * as util from 'util'
+
+
 export class Server {
-  private httpServer: HTTPServer;
+  private httpsServer: https = require('express');
   private app: Application;
   private io: SocketIOServer;
 
   private activeSockets: string[] = [];
-
-  private readonly DEFAULT_PORT = 5000;
+  
+  private PORT_NUMBER = 5000;
 
   constructor() {
     this.initialize();
   }
 
   private initialize(): void {
+    var express = require('express')
+    var fs = require('fs')
+
     this.app = express();
-    this.httpServer = createServer(this.app);
-    this.io = socketIO(this.httpServer);
+    this.httpsServer = createServer({
+      key: fs.readFileSync('src/key.pem'),
+      cert: fs.readFileSync('src/cert.pem')
+    }, this.app);
+    this.io = socketIO(this.httpsServer);
 
     this.configureApp();
     this.configureRoutes();
@@ -31,11 +41,22 @@ export class Server {
   }
 
   private configureRoutes(): void {
+
     this.app.get("/", (req, res) => {
+      console.log("sending index.html");
       res.sendFile("index.html");
     });
   }
 
+  public listen(callback: (port: number) => void): void {
+    this.httpsServer.listen(this.PORT_NUMBER, () => {
+      callback(this.PORT_NUMBER);
+    });
+  }
+
+  /**
+   * Handles socket and user logic
+   */
   private handleSocketConnection(): void {
     this.io.on("connection", socket => {
       const existingSocket = this.activeSockets.find(
@@ -87,9 +108,5 @@ export class Server {
     });
   }
 
-  public listen(callback: (port: number) => void): void {
-    this.httpServer.listen(this.DEFAULT_PORT, () => {
-      callback(this.DEFAULT_PORT);
-    });
-  }
+
 }
