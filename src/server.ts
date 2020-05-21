@@ -27,7 +27,7 @@ export class Server {
   }
 
   private configureApp(): void {
-    this.app.use(express.static(path.join(__dirname, "../public")));
+    this.app.use(express.static(path.join(__dirname, "../client")));
   }
 
   private configureRoutes(): void {
