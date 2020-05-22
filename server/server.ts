@@ -26,8 +26,8 @@ export class Server {
 
     this.app = express();
     this.httpsServer = createServer({
-      key: fs.readFileSync('src/key.pem'),
-      cert: fs.readFileSync('src/cert.pem')
+      key: fs.readFileSync('server/key.pem'),
+      cert: fs.readFileSync('server/cert.pem')
     }, this.app);
     this.io = socketIO(this.httpsServer);
 
@@ -37,7 +37,7 @@ export class Server {
   }
 
   private configureApp(): void {
-    this.app.use(express.static(path.join(__dirname, "../client")));
+    this.app.use(express.static(path.join(__dirname, "../frontend")));
   }
 
   private configureRoutes(): void {
