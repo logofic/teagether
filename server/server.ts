@@ -32,7 +32,9 @@ export class Server {
     this.io = socketIO(this.httpsServer);
 
     this.configureApp();
+
     this.configureRoutes();
+    
     this.handleSocketConnection();
   }
 

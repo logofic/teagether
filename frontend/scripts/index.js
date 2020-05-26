@@ -15,7 +15,7 @@ function unselectUsersFromList() {
   alreadySelectedUser.forEach(el => {
     el.setAttribute("class", "active-user");
   });
-}
+}]
 
 function createUserItemContainer(socketId) {
   const userContainerEl = document.createElement("div");
