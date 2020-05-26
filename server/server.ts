@@ -14,7 +14,7 @@ export class Server {
 
   private activeSockets: string[] = [];
   
-  private PORT_NUMBER = 5000;
+  private PORT_NUMBER = 3000;
 
   constructor() {
     this.initialize();
@@ -59,7 +59,7 @@ export class Server {
    * Handles socket and user logic
    */
   private handleSocketConnection(): void {
-    console.log("sending index.html");
+  
     this.io.sockets.on("connection", socket => {
       const existingSocket = this.activeSockets.find(
         existingSocket => existingSocket === socket.id
